@@ -34,6 +34,7 @@ Inicio presenta la marca y enlaza a cada experiencia. Los talleres y los catálo
 - Carrusel de campañas con flechas, selector de tarjetas, gesto táctil y códigos copiables. Todas las ofertas están identificadas como **DEMO** y no modifican los precios ni el subtotal.
 - Franjas promocionales en Talleres, Kits, Obras y Guías; campañas tipadas en `lib/marketing.ts`.
 - Animaciones suaves al entrar en pantalla y detalles animados en el banner. La rotación se pausa al interactuar, salir de pantalla u ocultar la pestaña; el movimiento reducido desactiva animaciones y reproducción automática.
+- Iconografía artesanal propia: 11 ilustraciones SVG en `components/craft-icons.tsx`, con mariposa, caballete, kit de materiales, cobre repujado, mostacillas Miyuki, familia, café creativo, guía, regalo, bienestar y calabazas pintadas. Se reutilizan en menú, categorías, promociones y técnicas; Lucide mantiene los controles de navegación.
 
 ## Datos de ejemplo y conexión real
 

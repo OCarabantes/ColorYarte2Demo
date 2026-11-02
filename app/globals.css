@@ -22,6 +22,10 @@ button, a, summary { touch-action: manipulation; }
 .nav-scroll { scrollbar-width: none; }
 .nav-scroll::-webkit-scrollbar { display: none; }
 .soft-dots { background-image: radial-gradient(#cdb3cc 1px, transparent 1px); background-size: 15px 15px; }
+.craft-icon { display: inline-block; flex-shrink: 0; overflow: visible; vertical-align: middle; }
+.craft-icon-stamp { position: relative; border: 1px solid #fff; outline: 1px dashed #ad7d8c38; outline-offset: -4px; box-shadow: 0 3px 0 #6741510b; transform: rotate(-3deg); transition: transform 300ms, box-shadow 300ms; }
+.craft-icon-stamp > svg { transform: rotate(3deg); }
+.group:hover .craft-icon-stamp { transform: translateY(-3px) rotate(3deg); box-shadow: 0 6px 12px #67415112; }
 .image-zoom img { transition: transform 700ms cubic-bezier(.2,.7,.2,1); }
 .image-zoom:hover img { transform: scale(1.045); }
 .dialog-panel { animation: reveal .2s ease-out; }

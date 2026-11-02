@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowUpRight, Check, FileDown, Heart, PackageCheck, Scissors, Truck } from "lucide-react";
+import { ArrowUpRight, Check, Truck } from "lucide-react";
 import { products, type ProductCategory } from "@/lib/storefront";
 import { ProductCard, WhatsAppIcon, WhatsAppLink } from "@/components/storefront-ui";
+import { KitIcon, EmbossingIcon, GuideIcon } from "@/components/craft-icons";
 import { useStorefront } from "@/components/site-shell";
 import { CampaignRibbon } from "@/components/campaign-carousel";
 
@@ -14,7 +15,7 @@ const categories = {
     eyebrow: "UNA CAJA, MIL POSIBILIDADES",
     description: "Llévate el taller a casa. Materiales seleccionados, instrucciones sencillas y una buena excusa para compartir tiempo en familia.",
     subtitle: "Tu próxima tarde creativa",
-    icon: Scissors,
+    icon: KitIcon,
     color: "bg-[#e9efdf] text-emerald-900",
     benefits: ["Materiales completos", "Instrucciones paso a paso", "Para crear a tu ritmo"],
     delivery: "Entrega y envío a coordinar por WhatsApp. El valor del envío se confirma antes de pagar.",
@@ -27,7 +28,7 @@ const categories = {
     eyebrow: "HECHO CON TIEMPO Y CORAZÓN",
     description: "Pequeñas obras con una historia detrás. Descubre piezas artesanales para regalar algo especial o dar un toque de color a tu espacio.",
     subtitle: "Piezas de autor, detalles con alma",
-    icon: Heart,
+    icon: EmbossingIcon,
     color: "bg-[#fbe9ed] text-rose-900",
     benefits: ["100% hecho a mano", "Detalles con identidad", "Terminaciones para consultar"],
     delivery: "Piezas y existencias de demostración. Consulta disponibilidad, terminación y envío por WhatsApp.",
@@ -40,7 +41,7 @@ const categories = {
     eyebrow: "LA INSPIRACIÓN TAMBIÉN SE LEE",
     description: "Un nuevo proyecto empieza en una página. Explora guías ilustradas con ideas, técnicas y ejercicios para aprender desde casa, a tu propio ritmo.",
     subtitle: "Tu próxima idea, paso a paso",
-    icon: FileDown,
+    icon: GuideIcon,
     color: "bg-[#f1e7f6] text-purple-900",
     benefits: ["Formato digital PDF", "Contenido en español", "Sin materiales físicos"],
     delivery: "Guías de demostración: consulta disponibilidad y entrega digital por WhatsApp. Aún no hay descarga automática.",
@@ -55,7 +56,7 @@ export function CatalogueContent({ category }: { category: ProductCategory }) {
   const { addToCart, openProduct } = useStorefront();
   const content = categories[category];
   const Icon = content.icon;
-  const DeliveryIcon = category === "guias" ? FileDown : Truck;
+  const DeliveryIcon = category === "guias" ? GuideIcon : Truck;
   const visibleProducts = products.filter((product) => product.category === category)
     .sort((a, b) => sort === "price-asc" ? a.price - b.price : sort === "price-desc" ? b.price - a.price : 0);
 
@@ -82,7 +83,7 @@ export function CatalogueContent({ category }: { category: ProductCategory }) {
         </div>
         <div className="grid gap-x-7 gap-y-9 sm:grid-cols-2">{visibleProducts.map((product) => <ProductCard key={product.id} product={product} onSelect={openProduct} onAdd={addToCart} />)}</div>
         <p className="mx-auto mt-7 flex max-w-2xl items-start justify-center gap-2 text-center text-[11px] leading-relaxed text-stone-500"><DeliveryIcon className="mt-0.5 size-4 shrink-0" aria-hidden="true" />{content.delivery}</p>
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-5 rounded-3xl border border-stone-200 bg-white p-6 sm:p-8"><div className="max-w-lg"><p className="mb-2 flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-rose-600"><PackageCheck className="size-3.5" aria-hidden="true" />Te acompañamos a elegir</p><h2 className="text-xl font-extrabold tracking-tight">{content.contact}</h2><p className="mt-2 text-xs leading-relaxed text-stone-500">{content.help}</p></div><WhatsAppLink message={content.message} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-emerald-800 px-5 py-3 text-xs font-bold text-white transition-all duration-300 hover:bg-emerald-900 active:scale-[.97]"><WhatsAppIcon className="size-4" />Conversemos<ArrowUpRight className="size-4" aria-hidden="true" /></WhatsAppLink></div>
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-5 rounded-3xl border border-stone-200 bg-white p-6 sm:p-8"><div className="max-w-lg"><p className="mb-2 flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-rose-600"><KitIcon className="size-3.5" aria-hidden="true" />Te acompañamos a elegir</p><h2 className="text-xl font-extrabold tracking-tight">{content.contact}</h2><p className="mt-2 text-xs leading-relaxed text-stone-500">{content.help}</p></div><WhatsAppLink message={content.message} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-emerald-800 px-5 py-3 text-xs font-bold text-white transition-all duration-300 hover:bg-emerald-900 active:scale-[.97]"><WhatsAppIcon className="size-4" />Conversemos<ArrowUpRight className="size-4" aria-hidden="true" /></WhatsAppLink></div>
       </section>
     </>
   );

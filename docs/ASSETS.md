@@ -1,5 +1,9 @@
 # Recursos visuales
 
+## Iconografía vectorial
+
+`components/craft-icons.tsx` contiene once ilustraciones SVG creadas directamente en código para la marca. Comparten trazo redondeado, contorno ciruela y rellenos coral, menta, dorado y cobre. Incluyen motivos específicos de las técnicas del taller y una mariposa inspirada en la identidad visual; el logo original se conserva. Los iconos decorativos se excluyen del nombre accesible de los controles y enlaces. No se generan archivos raster para estos iconos.
+
 El logo original del usuario se conserva sin cambios en `public/logo-color-arte.jpg`.
 
 Se utilizó la herramienta integrada **imagegen** (no CLI) para cuatro imágenes de ambientación, sin referencias a personas reales. Los originales se conservaron y se generaron versiones WebP mediante Sharp. No se requieren servicios externos para cargar las imágenes del sitio.

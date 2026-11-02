@@ -6,6 +6,7 @@ import { createContext, useContext, useEffect, useRef, useState, type KeyboardEv
 import { ArrowRight, ArrowUpRight, Check, Instagram, Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { products, GENERAL_MESSAGE, formatPrice, CART_KEY, navigation, buttonBase, primaryButton, type Product, type CartItem } from "@/lib/storefront";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/storefront-ui";
+import { CategoryCraftIcon } from "@/components/craft-icons";
 import { AnnouncementBar } from "@/components/announcement-bar";
 import { RevealOnScroll } from "@/components/reveal-on-scroll";
 
@@ -137,7 +138,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
             <div><span className="text-[20px] font-extrabold tracking-[-1.2px]">color<span className="font-medium text-rose-600">&</span>arte<span className="text-rose-500">.</span></span><span className="mt-0.5 block text-[7px] font-bold uppercase tracking-[.2em] text-stone-500">Un espacio para crear</span></div>
           </Link>
           <nav aria-label="Navegación principal" className="nav-scroll order-3 -mx-1 mt-3 flex w-[calc(100%+8px)] gap-0.5 overflow-x-auto rounded-full bg-[#f0ede9] p-1 lg:order-0 lg:mx-auto lg:mt-0 lg:w-auto lg:gap-0">
-            {navigation.map((item) => <Link key={item.id} href={item.href} aria-current={pathname === item.href ? "page" : undefined} className={`min-h-9 shrink-0 whitespace-nowrap rounded-full px-3 py-2.5 text-[10px] font-bold transition-all duration-300 xl:px-3.5 ${pathname === item.href ? "bg-white text-rose-700 shadow-sm" : "text-stone-600 hover:bg-white/65 hover:text-rose-700"}`}>{item.label}</Link>)}
+            {navigation.map((item) => <Link key={item.id} href={item.href} aria-current={pathname === item.href ? "page" : undefined} className={`inline-flex min-h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2.5 text-[10px] font-bold transition-all duration-300 xl:px-3.5 ${pathname === item.href ? "bg-white text-rose-700 shadow-sm" : "text-stone-600 hover:bg-white/65 hover:text-rose-700"}`}><CategoryCraftIcon category={item.id} className="size-4" />{item.label}</Link>)}
           </nav>
           <div className="ml-auto flex shrink-0 items-center gap-3 lg:ml-0">
             <button type="button" onClick={() => setDialog("cart")} className="relative flex size-11 items-center justify-center rounded-full text-stone-600 transition-all duration-300 hover:bg-rose-50 hover:text-rose-600" aria-label={`Abrir mi bolsa, ${cartCount} ${cartCount === 1 ? "producto" : "productos"}`}><ShoppingBag className="size-5" strokeWidth={1.5} aria-hidden="true" />{cartCount > 0 && <span className="absolute right-0 top-0 flex min-w-4 items-center justify-center rounded-full bg-rose-600 px-1 text-[9px] font-bold text-white">{cartCount}</span>}</button>

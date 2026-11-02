@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Gift, Pause, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
+import { GiftWrapIcon } from "@/components/craft-icons";
 import { campaigns } from "@/lib/marketing";
 import { useAutoAdvance } from "@/components/use-auto-advance";
 
@@ -15,7 +16,7 @@ export function AnnouncementBar() {
   return (
     <section ref={rootRef} {...interactionProps} aria-label="Ofertas y anuncios de demostración" className="announcement-bar" data-autoplay={running ? "playing" : "paused"}>
       <div className="announcement-inner">
-        <span className="announcement-demo"><Gift aria-hidden="true" /><span>DEMO</span></span>
+        <span className="announcement-demo"><GiftWrapIcon tone="current" aria-hidden="true" /><span>DEMO</span></span>
         <div className="announcement-message" aria-live={enabled ? "off" : "polite"} aria-atomic="true"><Link key={campaign.id} href={campaign.href}>{campaign.announcement}<ChevronRight aria-hidden="true" /></Link></div>
         <div className="announcement-controls">
           <button type="button" aria-label="Anuncio anterior" onClick={() => move(-1)}><ChevronLeft aria-hidden="true" /></button>
