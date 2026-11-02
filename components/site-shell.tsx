@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
-import { ArrowRight, ArrowUpRight, Check, Flower2, Instagram, Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, Instagram, Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { products, GENERAL_MESSAGE, formatPrice, CART_KEY, navigation, buttonBase, primaryButton, type Product, type CartItem } from "@/lib/storefront";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/storefront-ui";
+import { AnnouncementBar } from "@/components/announcement-bar";
+import { RevealOnScroll } from "@/components/reveal-on-scroll";
 
 function trapDialogFocus(event: KeyboardEvent<HTMLDialogElement>) {
   if (event.key !== "Tab") return;
@@ -125,7 +127,8 @@ export function SiteShell({ children }: { children: ReactNode }) {
   return (
     <StorefrontContext.Provider value={{ addToCart, openProduct }}>
       <a href="#contenido" className="sr-only fixed left-4 top-4 z-100 rounded-full bg-white px-5 py-3 text-sm font-bold text-rose-700 shadow-xl focus:not-sr-only">Saltar al contenido</a>
-      <div className="site-announcement flex min-h-8 items-center justify-center gap-2 bg-[#f3ebf3] px-4 py-2 text-center text-[10px] font-semibold tracking-wide text-[#79546f]"><Flower2 className="size-3.5" aria-hidden="true" /><span>Menos pantallas, más momentos juntos. <span className="hidden sm:inline">Tu pausa creativa empieza aquí.</span></span><Flower2 className="size-3.5" aria-hidden="true" /></div>
+      <AnnouncementBar />
+      <RevealOnScroll />
 
       <header className="site-header sticky top-0 z-40 border-b border-stone-200/70 bg-cream/95 backdrop-blur-xl">
         <div className="site-header-inner mx-auto flex max-w-[1320px] flex-wrap items-center gap-x-4 px-5 py-3 md:px-8 lg:flex-nowrap lg:py-4">
@@ -150,7 +153,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
       <WhatsAppLink message={GENERAL_MESSAGE} label="Hablemos por WhatsApp" className="group fixed bottom-6 right-5 z-40 flex size-[54px] items-center justify-center rounded-full border-[4px] border-cream bg-[#27885b] text-white shadow-xl shadow-emerald-950/15 transition-all duration-300 hover:-translate-y-1 hover:bg-emerald-800 active:scale-95 sm:bottom-7 sm:right-7"><span role="tooltip" className="pointer-events-none absolute right-[62px] hidden w-max rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-[11px] font-semibold text-ink opacity-0 shadow-lg transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 sm:block">¿Creamos algo bonito? 🌷</span><WhatsAppIcon className="size-6" /></WhatsAppLink>
 
-      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">{announcement}</div>
+      <div role="status" aria-label="Avisos de la bolsa" aria-live="polite" aria-atomic="true" className="sr-only">{announcement}</div>
       {toast && <div className="fixed bottom-24 left-1/2 z-60 flex w-[calc(100%-40px)] max-w-md -translate-x-1/2 items-center gap-3 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-xs text-ink shadow-xl"><span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700"><Check className="size-4" /></span><span className="flex-1">{toast}</span><button type="button" aria-label="Cerrar aviso" onClick={() => setToast("")} className="flex size-8 shrink-0 items-center justify-center rounded-full hover:bg-stone-100"><X className="size-3.5" /></button></div>}
 
       <dialog ref={dialogRef} onKeyDown={trapDialogFocus} onCancel={() => setDialog(null)} onClose={() => setDialog(null)} onClick={(event) => { if (event.target === event.currentTarget) { const rect = event.currentTarget.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) setDialog(null); } }} aria-labelledby="dialog-title" className="dialog-panel fixed inset-0 m-auto max-h-[88dvh] w-[calc(100%-32px)] max-w-[680px] overflow-y-auto rounded-[26px] border-0 bg-cream p-0 text-ink shadow-2xl backdrop:bg-[#24192e]/50 backdrop:backdrop-blur-sm">

@@ -30,6 +30,10 @@ Inicio presenta la marca y enlaza a cada experiencia. Los talleres y los catálo
 - Diálogo nativo, gestión de foco, Escape, anuncios para lectores de pantalla, enlace para saltar al contenido y preferencias de movimiento reducido.
 - Logo original suministrado e imágenes WebP locales. Las fuentes también se sirven localmente.
 - Banner adaptado al ancho y alto disponibles mediante `svh`: conserva texto, dos llamadas a la acción e imagen completa. En teléfonos de poca altura, la foto y la descripción comparten una fila. La imagen mantiene su proporción original, sin recortarse. En horizontal o con zoom se permite desplazamiento para conservar la legibilidad.
+- Announcement Bar con cuatro anuncios rotativos, enlaces a las páginas de cada categoría, controles manuales y pausa.
+- Carrusel de campañas con flechas, selector de tarjetas, gesto táctil y códigos copiables. Todas las ofertas están identificadas como **DEMO** y no modifican los precios ni el subtotal.
+- Franjas promocionales en Talleres, Kits, Obras y Guías; campañas tipadas en `lib/marketing.ts`.
+- Animaciones suaves al entrar en pantalla y detalles animados en el banner. La rotación se pausa al interactuar, salir de pantalla u ocultar la pestaña; el movimiento reducido desactiva animaciones y reproducción automática.
 
 ## Datos de ejemplo y conexión real
 

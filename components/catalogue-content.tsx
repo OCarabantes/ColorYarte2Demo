@@ -6,6 +6,7 @@ import { ArrowUpRight, Check, FileDown, Heart, PackageCheck, Scissors, Truck } f
 import { products, type ProductCategory } from "@/lib/storefront";
 import { ProductCard, WhatsAppIcon, WhatsAppLink } from "@/components/storefront-ui";
 import { useStorefront } from "@/components/site-shell";
+import { CampaignRibbon } from "@/components/campaign-carousel";
 
 const categories = {
   kits: {
@@ -73,7 +74,8 @@ export function CatalogueContent({ category }: { category: ProductCategory }) {
         </div>
       </section>
 
-      <section id="catalogo" aria-labelledby="catalogue-title" className="mx-auto max-w-[1100px] px-5 pb-12 md:px-8">
+      <section data-reveal id="catalogo" aria-labelledby="catalogue-title" className="mx-auto max-w-[1100px] px-5 pb-12 md:px-8">
+        <CampaignRibbon category={category} />
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-stone-200 pb-5">
           <div><h2 id="catalogue-title" className="text-xl font-extrabold tracking-tight sm:text-2xl">{content.subtitle}</h2><p className="mt-2 text-[11px] text-stone-500">{visibleProducts.length} {category === "guias" ? "guías para explorar" : category === "kits" ? "kits para crear" : "piezas para descubrir"}</p></div>
           <label className="flex min-h-11 items-center gap-2 text-[11px] text-stone-500"><span>Ordenar:</span><select aria-label="Ordenar productos" value={sort} onChange={(event) => setSort(event.target.value)} className="min-h-11 max-w-40 cursor-pointer rounded-full border border-stone-200 bg-white px-3 text-[11px] font-bold text-ink"><option value="featured">Nuestros favoritos</option><option value="price-asc">Menor precio primero</option><option value="price-desc">Mayor precio primero</option></select></label>

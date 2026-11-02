@@ -81,7 +81,7 @@ test("Las guías digitales solo se agregan una vez", async ({ page }) => {
   const addGuide = page.getByRole("button", { name: "Agregar Guía PDF · Mi primer repujado a mi bolsa", exact: true });
   await addGuide.click();
   await addGuide.click();
-  await expect(page.getByRole("status")).toContainText("Esta guía ya está en tu bolsa.");
+  await expect(page.getByRole("status", { name: "Avisos de la bolsa" })).toContainText("Esta guía ya está en tu bolsa.");
   await page.getByRole("button", { name: "Abrir mi bolsa, 1 producto", exact: true }).click();
   await expect(page.getByRole("dialog")).toContainText("1 guía digital");
 });

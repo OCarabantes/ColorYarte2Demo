@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { testimonials, GENERAL_MESSAGE, buttonBase } from "@/lib/storefront";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/storefront-ui";
+import { CampaignCarousel } from "@/components/campaign-carousel";
 
 export function HomeContent() {
   return <>
@@ -36,7 +37,9 @@ export function HomeContent() {
         </section>
 
 
-        <section aria-labelledby="discover-title" className="mx-auto max-w-[1260px] px-5 py-12 md:px-8 md:py-16">
+        <CampaignCarousel />
+
+        <section data-reveal aria-labelledby="discover-title" className="mx-auto max-w-[1260px] px-5 py-12 md:px-8 md:py-16">
           <p className="section-kicker mb-3 text-rose-600">ELIGE CÓMO QUIERES CREAR</p>
           <h2 id="discover-title" className="text-3xl font-extrabold tracking-tight sm:text-[35px]">Un mundo de posibilidades<span className="text-rose-500">.</span></h2>
           <p className="mt-3 text-sm text-stone-500">Cada camino tiene su propio espacio. Encuentra el tuyo.</p>
@@ -49,7 +52,7 @@ export function HomeContent() {
             ].map(({ href, title, text, icon: Icon, color }) => <Link key={href} href={href} className="group rounded-3xl border border-stone-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-rose-200 hover:shadow-lg"><span className={"mb-5 flex size-11 items-center justify-center rounded-2xl " + color}><Icon className="size-5" strokeWidth={1.5} aria-hidden="true" /></span><h3 className="text-sm font-extrabold">{title}</h3><p className="mt-2 text-xs leading-relaxed text-stone-500">{text}</p><span className="mt-5 inline-flex items-center gap-2 text-xs font-bold text-rose-700">Explorar<ArrowUpRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" /></span></Link>)}
           </div>
         </section>
-        <section aria-labelledby="family-title" className="mx-auto max-w-[1260px] px-5 py-14 md:px-8 md:py-20">
+        <section data-reveal aria-labelledby="family-title" className="mx-auto max-w-[1260px] px-5 py-14 md:px-8 md:py-20">
           <div className="grid items-center gap-9 md:grid-cols-[.9fr_1fr] md:gap-14">
             <div className="relative mx-auto w-full max-w-[510px] px-4 pb-4 sm:px-7 md:px-3">
               <div className="absolute inset-x-0 bottom-0 top-6 rotate-[-5deg] rounded-[30px] bg-[#e8eedf]" />
@@ -61,7 +64,7 @@ export function HomeContent() {
           </div>
         </section>
 
-        <section aria-labelledby="testimonials-title" className="border-t border-stone-200/80 bg-[#f8f4f0] px-5 py-12 md:px-8 md:py-16">
+        <section data-reveal aria-labelledby="testimonials-title" className="border-t border-stone-200/80 bg-[#f8f4f0] px-5 py-12 md:px-8 md:py-16">
           <div className="mx-auto max-w-[1196px]"><div className="text-center"><p className="section-kicker mb-3 text-rose-600">RECUERDOS QUE SE QUEDAN</p><h2 id="testimonials-title" className="text-[28px] font-extrabold leading-tight tracking-[-.045em] sm:text-[35px]">El mejor resultado es cómo te sientes<span className="text-rose-500">.</span></h2><p className="mt-3 text-xs text-stone-500">Historias de ejemplo que imaginan la experiencia Color & Arte.</p></div>
             <div className="mt-8 grid gap-4 md:grid-cols-3">{testimonials.map((testimonial) => <figure key={testimonial.id} className="flex flex-col rounded-[22px] border border-stone-200/70 bg-cream p-6"><div className="mb-4 flex items-center gap-1 text-[#c48b30]" aria-hidden="true">{[0, 1, 2, 3, 4].map((star) => <Star key={star} className="size-3" fill="currentColor" strokeWidth={0} />)}</div><blockquote className="mb-6 text-[12px] leading-[1.9] text-stone-600">“{testimonial.quote}”</blockquote><figcaption className="mt-auto flex items-center gap-2.5"><span className={`flex size-9 shrink-0 items-center justify-center rounded-full text-[10px] font-extrabold ${testimonial.color}`}>{testimonial.initials}</span><div><p className="text-[11px] font-extrabold">{testimonial.name}</p><p className="mt-0.5 text-[9px] text-stone-500">{testimonial.context}</p></div><Heart className="ml-auto size-4 text-rose-300" strokeWidth={1.5} aria-hidden="true" /></figcaption></figure>)}</div><p className="mt-4 text-center text-[9px] text-stone-500">Testimonios ilustrativos; no corresponden a reseñas de clientes reales.</p>
           </div>
