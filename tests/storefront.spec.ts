@@ -33,10 +33,10 @@ test("La navegación abre catálogos independientes y ordena precios", async ({ 
   await page.getByRole("link", { name: "Kits DIY Familiares", exact: true }).click();
   await expect(page).toHaveURL("/kits");
   const catalogue = page.locator("#catalogo");
-  await expect(catalogue.locator("article")).toHaveCount(2);
+  await expect(catalogue.locator("article")).toHaveCount(8);
   await expect(page.getByRole("navigation").getByRole("link", { name: "Kits DIY Familiares", exact: true })).toHaveAttribute("aria-current", "page");
   await page.getByLabel("Ordenar productos").selectOption("price-desc");
-  await expect(catalogue.locator("article").first()).toContainText("Teje tu propia magia");
+  await expect(catalogue.locator("article").first()).toContainText("Repujado Familiar");
   await page.getByRole("navigation").getByRole("link", { name: "Guías PDF", exact: true }).click();
   await expect(page).toHaveURL("/guias");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Guías PDF.");
@@ -56,20 +56,20 @@ test("La navegación abre catálogos independientes y ordena precios", async ({ 
 
 test("La bolsa actualiza cantidades, persiste y prepara el mensaje correcto", async ({ page }) => {
   await page.goto("/kits");
-  await page.getByRole("button", { name: "Agregar Kit · Una tarde de colores a mi bolsa", exact: true }).click();
+  await page.getByRole("button", { name: "Agregar Kit · Pinta tu Corazón en Familia a mi bolsa", exact: true }).click();
   await page.getByRole("button", { name: "Abrir mi bolsa, 1 producto", exact: true }).click();
   const dialog = page.getByRole("dialog");
-  await dialog.getByRole("button", { name: "Sumar una unidad de Kit · Una tarde de colores", exact: true }).click();
+  await dialog.getByRole("button", { name: "Sumar una unidad de Kit · Pinta tu Corazón en Familia", exact: true }).click();
   const href = await dialog.getByRole("link", { name: /Consultar pedido por WhatsApp/ }).getAttribute("href");
   const url = new URL(href!);
   expect(url.pathname).toBe("/56983855951");
-  expect(url.searchParams.get("text")).toContain("2 × Kit · Una tarde de colores");
+  expect(url.searchParams.get("text")).toContain("2 × Kit · Pinta tu Corazón en Familia");
   expect(url.searchParams.get("text")).toContain("37.800");
   await expect.poll(async () => page.evaluate(() => JSON.parse(localStorage.getItem("color-arte-bag-v1")!)[0].quantity)).toBe(2);
   await page.reload();
   await page.getByRole("button", { name: "Abrir mi bolsa, 2 productos", exact: true }).click();
   await expect(dialog).toContainText("37.800");
-  await dialog.getByRole("button", { name: "Eliminar Kit · Una tarde de colores de la bolsa", exact: true }).click();
+  await dialog.getByRole("button", { name: "Eliminar Kit · Pinta tu Corazón en Familia de la bolsa", exact: true }).click();
   await expect(dialog).toContainText("Aquí empieza algo bonito");
   await dialog.getByRole("button", { name: /Explorar la tiendita/ }).click();
   await expect(dialog).not.toBeVisible();
@@ -148,7 +148,7 @@ test("Cada menú tiene URL propia, contenido exclusivo y navegación de regreso"
     else {
       await expect(page.locator("#talleres")).toHaveCount(0);
       const cards = page.locator("#catalogo article");
-      await expect(cards).toHaveCount(2);
+      await expect(cards).toHaveCount(route.path === "/kits" ? 8 : 2);
       await expect(cards.filter({ hasText: route.path === "/kits" ? "Guía PDF" : "Kit ·" })).toHaveCount(0);
     }
   }
@@ -166,7 +166,7 @@ test("Cada menú tiene URL propia, contenido exclusivo y navegación de regreso"
 
 test("La bolsa reúne productos de distintas páginas sin perder su contenido", async ({ page }) => {
   await page.goto("/kits");
-  await page.getByRole("button", { name: "Agregar Kit · Una tarde de colores a mi bolsa", exact: true }).click();
+  await page.getByRole("button", { name: "Agregar Kit · Pinta tu Corazón en Familia a mi bolsa", exact: true }).click();
   const nav = page.getByRole("navigation");
   await nav.getByRole("link", { name: "Obras Únicas", exact: true }).click();
   await expect(page).toHaveURL("/obras");
@@ -178,7 +178,7 @@ test("La bolsa reúne productos de distintas páginas sin perder su contenido", 
   await expect(dialog.getByRole("listitem")).toHaveCount(3);
   const href = await dialog.getByRole("link", { name: /Consultar pedido por WhatsApp/ }).getAttribute("href");
   const message = new URL(href!).searchParams.get("text")!;
-  expect(message).toContain("Una tarde de colores");
+  expect(message).toContain("Pinta tu Corazón en Familia");
   expect(message).toContain("Jardín de colores");
   expect(message).toContain("Mi primer repujado");
   expect(message).toContain("39.700");

@@ -58,7 +58,7 @@ test("Los códigos se copian con feedback y no descuentan el pedido de demostrac
   await promo.getByRole("button", { name: "Copiar código de demostración CREA15" }).click();
   await expect(promo.getByRole("status")).toHaveText("¡Código copiado!");
   expect(await page.evaluate(() => (window as Window & { copiedCode?: string }).copiedCode)).toBe("CREA15");
-  await page.getByRole("button", { name: "Agregar Kit · Una tarde de colores a mi bolsa", exact: true }).click();
+  await page.getByRole("button", { name: "Agregar Kit · Pinta tu Corazón en Familia a mi bolsa", exact: true }).click();
   await page.getByRole("button", { name: "Abrir mi bolsa, 1 producto", exact: true }).click();
   const dialog = page.getByRole("dialog");
   const href = await dialog.getByRole("link", { name: /Consultar pedido por WhatsApp/ }).getAttribute("href");

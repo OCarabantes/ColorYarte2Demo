@@ -42,8 +42,18 @@ export function SiteShell({ children }: { children: ReactNode }) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [announcement, setAnnouncement] = useState("");
   const [toast, setToast] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 110);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     try {
@@ -131,15 +141,39 @@ export function SiteShell({ children }: { children: ReactNode }) {
       <AnnouncementBar />
       <RevealOnScroll />
 
-      <header className="site-header sticky top-0 z-40 border-b border-stone-200/70 bg-cream/95 backdrop-blur-xl">
+      <header className="site-header relative z-40 border-b border-stone-200/70 bg-cream/95 backdrop-blur-xl">
         <div className="site-header-inner mx-auto flex max-w-[1320px] flex-wrap items-center gap-x-4 px-5 py-3 md:px-8 lg:flex-nowrap lg:py-4">
           <Link href="/" aria-label="Color & Arte, inicio" className="flex shrink-0 items-center gap-2.5">
             <img src="/logo-color-arte.jpg" alt="" width={54} height={54} className="site-logo size-[49px] rounded-full border border-stone-200 bg-white object-cover lg:size-[54px]" />
             <div><span className="text-[20px] font-extrabold tracking-[-1.2px]">color<span className="font-medium text-rose-600">&</span>arte<span className="text-rose-500">.</span></span><span className="mt-0.5 block text-[7px] font-bold uppercase tracking-[.2em] text-stone-500">Un espacio para crear</span></div>
           </Link>
-          <nav aria-label="Navegación principal" className="nav-scroll order-3 -mx-1 mt-3 flex w-[calc(100%+8px)] gap-0.5 overflow-x-auto rounded-full bg-[#f0ede9] p-1 lg:order-0 lg:mx-auto lg:mt-0 lg:w-auto lg:gap-0">
-            {navigation.map((item) => <Link key={item.id} href={item.href} aria-current={pathname === item.href ? "page" : undefined} className={`inline-flex min-h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2.5 text-[10px] font-bold transition-all duration-300 xl:px-3.5 ${pathname === item.href ? "bg-white text-rose-700 shadow-sm" : "text-stone-600 hover:bg-white/65 hover:text-rose-700"}`}><CategoryCraftIcon category={item.id} className="size-4" />{item.label}</Link>)}
-          </nav>
+          {isScrolled ? (
+            <div aria-hidden="true" className="order-3 mt-2.5 h-11 w-full lg:order-0 lg:mx-auto lg:mt-0 lg:h-12 lg:w-64" />
+          ) : (
+            <nav
+              aria-label="Navegación principal"
+              className="nav-scroll order-3 mx-auto mt-2.5 flex w-fit max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-[#F3B8CC] bg-[#FFFBFD] p-1 shadow-xs lg:order-0 lg:mt-0 sm:gap-1"
+            >
+              {navigation.map((item) => {
+                const active = pathname === item.href;
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    className={`inline-flex min-h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-extrabold tracking-[-0.01em] transition-all duration-300 sm:min-h-10 sm:px-4 sm:py-2 sm:text-[13px] ${
+                      active
+                        ? "bg-[#E9004B] text-white shadow-sm shadow-[#E9004B]/25"
+                        : "text-[#21152D] hover:bg-[#FFF0F4] hover:text-[#E9004B]"
+                    }`}
+                  >
+                    <CategoryCraftIcon category={item.id} className="size-4 sm:size-[18px]" tone={active ? "current" : "color"} />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+          )}
           <div className="ml-auto flex shrink-0 items-center gap-3 lg:ml-0">
             <button type="button" onClick={() => setDialog("cart")} className="relative flex size-11 items-center justify-center rounded-full text-stone-600 transition-all duration-300 hover:bg-rose-50 hover:text-rose-600" aria-label={`Abrir mi bolsa, ${cartCount} ${cartCount === 1 ? "producto" : "productos"}`}><ShoppingBag className="size-5" strokeWidth={1.5} aria-hidden="true" />{cartCount > 0 && <span className="absolute right-0 top-0 flex min-w-4 items-center justify-center rounded-full bg-rose-600 px-1 text-[9px] font-bold text-white">{cartCount}</span>}</button>
             <WhatsAppLink message={GENERAL_MESSAGE} className={`hidden min-h-11 items-center justify-center gap-1.5 rounded-full bg-[#e8f1e8] px-4 py-2.5 text-[10px] font-bold text-emerald-900 transition-all duration-300 hover:bg-emerald-100 sm:inline-flex`}><WhatsAppIcon className="size-4" />Conversemos</WhatsAppLink>
@@ -147,19 +181,70 @@ export function SiteShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
+      {isScrolled && (
+        <nav
+          aria-label="Navegación principal"
+          className="floating-bottom-nav nav-scroll flex items-center gap-0.5 overflow-x-auto rounded-full p-1 sm:gap-1"
+        >
+          {navigation.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`inline-flex min-h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-extrabold tracking-[-0.01em] transition-all duration-300 sm:min-h-10 sm:px-4 sm:py-2 sm:text-[13px] ${
+                  active
+                    ? "bg-[#E9004B] text-white shadow-sm shadow-[#E9004B]/25"
+                    : "text-[#21152D] hover:bg-[#FFF0F4] hover:text-[#E9004B]"
+                }`}
+              >
+                <CategoryCraftIcon category={item.id} className="size-4 sm:size-[18px]" tone={active ? "current" : "color"} />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      )}
+
 
       <main id="contenido" tabIndex={-1}>{children}</main>
 
-      <footer className="border-t border-stone-200 bg-[#f1ede7] px-5 pb-6 pt-9 md:px-8"><div className="mx-auto max-w-[1196px]"><div className="flex flex-wrap items-start justify-between gap-7"><Link href="/" className="flex items-center gap-3"><img src="/logo-color-arte.jpg" alt="Logo de Color & Arte: una mariposa multicolor" width={48} height={48} className="size-12 rounded-full border border-stone-200" /><div><span className="text-xl font-extrabold tracking-[-1px]">color<span className="font-medium text-rose-600">&</span>arte.</span><p className="mt-1 text-[10px] text-stone-500">Creamos con las manos. Conectamos con el corazón.</p></div></Link><div className="flex gap-6 text-[10px] font-bold text-stone-600"><Link href="/talleres" className="py-3 transition-colors hover:text-rose-600">Los talleres</Link><Link href="/kits" className="py-3 transition-colors hover:text-rose-600">La tiendita</Link><a href="https://www.instagram.com/coloryarte_manualidades/" target="_blank" rel="noopener noreferrer" aria-label="Color & Arte en Instagram (abre en otra pestaña)" className="flex size-10 items-center justify-center rounded-full border border-stone-300 transition-colors hover:bg-white hover:text-rose-600"><Instagram className="size-4" aria-hidden="true" /></a></div></div><div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-stone-300/60 pt-5 text-[9px] leading-relaxed text-stone-500"><p>© {new Date().getFullYear()} Color & Arte · Hecho con cariño en Chile.</p><WhatsAppLink message={GENERAL_MESSAGE} className="inline-flex min-h-8 items-center gap-1.5 hover:text-rose-600"><WhatsAppIcon className="size-3" />+56 9 8385 5951</WhatsAppLink></div><p id="demo-notice" className="mt-3 max-w-4xl text-[9px] leading-relaxed text-stone-500">Vista de demostración: fechas, sedes, precios, existencias, cupos y testimonios son ilustrativos. Imágenes de ambientación generadas con IA; logo proporcionado por la marca. Confirma los detalles reales por WhatsApp. No se procesan pagos ni se realizan reservas automáticas en esta página.</p></div></footer>
+      <footer className="border-t border-stone-200 bg-[#f1ede7] px-5 pb-28 pt-9 md:px-8"><div className="mx-auto max-w-[1196px]"><div className="flex flex-wrap items-start justify-between gap-7"><Link href="/" className="flex items-center gap-3"><img src="/logo-color-arte.jpg" alt="Logo de Color & Arte: una mariposa multicolor" width={48} height={48} className="size-12 rounded-full border border-stone-200" /><div><span className="text-xl font-extrabold tracking-[-1px]">color<span className="font-medium text-rose-600">&</span>arte.</span><p className="mt-1 text-[10px] text-stone-500">Creamos con las manos. Conectamos con el corazón.</p></div></Link><div className="flex gap-6 text-[10px] font-bold text-stone-600"><Link href="/talleres" className="py-3 transition-colors hover:text-rose-600">Los talleres</Link><Link href="/kits" className="py-3 transition-colors hover:text-rose-600">La tiendita</Link><a href="https://www.instagram.com/coloryarte_manualidades/" target="_blank" rel="noopener noreferrer" aria-label="Color & Arte en Instagram (abre en otra pestaña)" className="flex size-10 items-center justify-center rounded-full border border-stone-300 transition-colors hover:bg-white hover:text-rose-600"><Instagram className="size-4" aria-hidden="true" /></a></div></div><div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-stone-300/60 pt-5 text-[9px] leading-relaxed text-stone-500"><p>© {new Date().getFullYear()} Color & Arte · Hecho con cariño en Chile.</p><WhatsAppLink message={GENERAL_MESSAGE} className="inline-flex min-h-8 items-center gap-1.5 hover:text-rose-600"><WhatsAppIcon className="size-3" />+56 9 8385 5951</WhatsAppLink></div><p id="demo-notice" className="mt-3 max-w-4xl text-[9px] leading-relaxed text-stone-500">Vista de demostración: fechas, sedes, precios, existencias, cupos y testimonios son ilustrativos. Imágenes de ambientación generadas con IA; logo proporcionado por la marca. Confirma los detalles reales por WhatsApp. No se procesan pagos ni se realizan reservas automáticas en esta página.</p></div></footer>
 
-      <WhatsAppLink message={GENERAL_MESSAGE} label="Hablemos por WhatsApp" className="group fixed bottom-6 right-5 z-40 flex size-[54px] items-center justify-center rounded-full border-[4px] border-cream bg-[#27885b] text-white shadow-xl shadow-emerald-950/15 transition-all duration-300 hover:-translate-y-1 hover:bg-emerald-800 active:scale-95 sm:bottom-7 sm:right-7"><span role="tooltip" className="pointer-events-none absolute right-[62px] hidden w-max rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-[11px] font-semibold text-ink opacity-0 shadow-lg transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 sm:block">¿Creamos algo bonito? 🌷</span><WhatsAppIcon className="size-6" /></WhatsAppLink>
+      <WhatsAppLink message={GENERAL_MESSAGE} label="Hablemos por WhatsApp" className={`group fixed right-5 z-40 flex size-[54px] items-center justify-center rounded-full border-[4px] border-cream bg-[#27885b] text-white shadow-xl shadow-emerald-950/15 transition-all duration-300 hover:-translate-y-1 hover:bg-emerald-800 active:scale-95 sm:bottom-7 sm:right-7 ${isScrolled ? "bottom-24" : "bottom-6"}`}><span role="tooltip" className="pointer-events-none absolute right-[62px] hidden w-max rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-[11px] font-semibold text-ink opacity-0 shadow-lg transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 sm:block">¿Creamos algo bonito? 🌷</span><WhatsAppIcon className="size-6" /></WhatsAppLink>
 
       <div role="status" aria-label="Avisos de la bolsa" aria-live="polite" aria-atomic="true" className="sr-only">{announcement}</div>
       {toast && <div className="fixed bottom-24 left-1/2 z-60 flex w-[calc(100%-40px)] max-w-md -translate-x-1/2 items-center gap-3 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-xs text-ink shadow-xl"><span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700"><Check className="size-4" /></span><span className="flex-1">{toast}</span><button type="button" aria-label="Cerrar aviso" onClick={() => setToast("")} className="flex size-8 shrink-0 items-center justify-center rounded-full hover:bg-stone-100"><X className="size-3.5" /></button></div>}
 
       <dialog ref={dialogRef} onKeyDown={trapDialogFocus} onCancel={() => setDialog(null)} onClose={() => setDialog(null)} onClick={(event) => { if (event.target === event.currentTarget) { const rect = event.currentTarget.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) setDialog(null); } }} aria-labelledby="dialog-title" className="dialog-panel fixed inset-0 m-auto max-h-[88dvh] w-[calc(100%-32px)] max-w-[680px] overflow-y-auto rounded-[26px] border-0 bg-cream p-0 text-ink shadow-2xl backdrop:bg-[#24192e]/50 backdrop:backdrop-blur-sm">
         <div className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-stone-200 bg-cream/95 px-5 py-4 backdrop-blur-md"><h2 id="dialog-title" className="text-sm font-extrabold">{dialog === "cart" ? `Tu bolsa creativa (${cartCount})` : "Un detalle hecho para ti"}</h2><button type="button" onClick={() => setDialog(null)} aria-label="Cerrar ventana" className="flex size-9 items-center justify-center rounded-full bg-white text-stone-500 transition-colors hover:bg-rose-100 hover:text-rose-700"><X className="size-4" aria-hidden="true" /></button></div>
-        {dialog === "product" && selectedProduct && <div className="p-5 sm:p-7"><img src={selectedProduct.image} alt={selectedProduct.imageAlt} width={1100} height={733} className="aspect-[1.8] w-full rounded-2xl object-cover" /><p className="mt-5 text-[10px] font-extrabold uppercase tracking-wider text-rose-600">{selectedProduct.badge}</p><h3 className="mt-2 text-2xl font-extrabold tracking-tight">{selectedProduct.name}</h3><p className="mt-3 text-sm leading-relaxed text-stone-500">{selectedProduct.detail}</p><h4 className="mb-3 mt-5 text-xs font-extrabold">Lo que viene contigo</h4><ul className="grid gap-2 sm:grid-cols-2">{selectedProduct.includes.map((item) => <li key={item} className="flex items-start gap-2 text-xs leading-relaxed text-stone-600"><Check className="mt-0.5 size-3.5 shrink-0 text-emerald-600" aria-hidden="true" />{item}</li>)}</ul><div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-stone-200 pt-5"><span className="text-2xl font-extrabold">{formatPrice(selectedProduct.price)}<span className="ml-1 text-[10px] font-normal text-stone-500">CLP</span></span><button type="button" onClick={() => addToCart(selectedProduct)} className={primaryButton}><ShoppingBag className="size-4" aria-hidden="true" />Agregar a mi bolsa</button></div><WhatsAppLink message={`¡Hola, Color & Arte! 🌷 Me interesa «${selectedProduct.name}» (${formatPrice(selectedProduct.price)} CLP). ¿Me confirman disponibilidad${selectedProduct.category === "guias" ? " y cómo recibir el PDF" : ", entrega y formas de pago"}?`} className="mt-4 flex min-h-11 items-center justify-center gap-2 text-xs font-bold text-emerald-800 underline decoration-emerald-300 underline-offset-4"><WhatsAppIcon className="size-4" />{selectedProduct.category === "guias" ? "Consultar guía por WhatsApp" : "Consultar esta pieza por WhatsApp"}</WhatsAppLink><p className="mt-3 text-center text-[10px] leading-relaxed text-stone-500">{selectedProduct.category === "guias" ? "Guía de demostración. Consulta su disponibilidad; no hay descarga ni cobro automático en esta versión." : "Producto ilustrativo. Confirma existencias y costo de envío antes de pagar."}</p></div>}
+        {dialog === "product" && selectedProduct && <div className="p-5 sm:p-7">
+          <div className={`relative overflow-hidden rounded-2xl ${selectedProduct.category === "kits" ? "bg-linear-to-b from-[#faf5ee] to-[#f1e9de] p-3" : ""}`}>
+            <img src={selectedProduct.image} alt={selectedProduct.imageAlt} width={1100} height={733} className={`w-full rounded-xl ${selectedProduct.category === "kits" ? "aspect-[1.15] object-contain" : "aspect-[1.8] object-cover"}`} />
+            {selectedProduct.occasionTag && <span className="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[10px] font-extrabold text-rose-700 shadow-sm">{selectedProduct.occasionTag}</span>}
+          </div>
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <p className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600">{selectedProduct.badge}</p>
+            {selectedProduct.familyAudience && <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-800">{selectedProduct.familyAudience}</span>}
+          </div>
+          <h3 className="mt-2 text-2xl font-extrabold tracking-tight">{selectedProduct.name}</h3>
+          {selectedProduct.tagline && <p className="mt-2 rounded-xl border border-amber-200/70 bg-[#fff9eb] px-3.5 py-2 text-xs font-bold text-[#7c5321]">“{selectedProduct.tagline}”</p>}
+          <p className="mt-3 text-sm leading-relaxed text-stone-500">{selectedProduct.detail}</p>
+          {selectedProduct.highlights && selectedProduct.highlights.length > 0 && (
+            <div className="mt-4 rounded-2xl bg-rose-50/60 p-4">
+              <h4 className="mb-2 text-xs font-extrabold text-rose-900">¿Por qué les encantará en casa?</h4>
+              <ul className="space-y-1.5">
+                {selectedProduct.highlights.map((item) => <li key={item} className="flex items-start gap-2 text-xs leading-relaxed text-stone-700"><Check className="mt-0.5 size-3.5 shrink-0 text-rose-600" aria-hidden="true" />{item}</li>)}
+              </ul>
+            </div>
+          )}
+          <h4 className="mb-3 mt-5 text-xs font-extrabold">Lo que viene contigo</h4>
+          <ul className="grid gap-2 sm:grid-cols-2">{selectedProduct.includes.map((item) => <li key={item} className="flex items-start gap-2 text-xs leading-relaxed text-stone-600"><Check className="mt-0.5 size-3.5 shrink-0 text-emerald-600" aria-hidden="true" />{item}</li>)}</ul>
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-stone-200 pt-5"><span className="text-2xl font-extrabold">{formatPrice(selectedProduct.price)}<span className="ml-1 text-[10px] font-normal text-stone-500">CLP</span></span><button type="button" onClick={() => addToCart(selectedProduct)} className={primaryButton}><ShoppingBag className="size-4" aria-hidden="true" />Agregar a mi bolsa</button></div>
+          <WhatsAppLink message={`¡Hola, Color & Arte! 🌷 Me interesa «${selectedProduct.name}» (${formatPrice(selectedProduct.price)} CLP). ¿Me confirman disponibilidad${selectedProduct.category === "guias" ? " y cómo recibir el PDF" : ", entrega y formas de pago"}?`} className="mt-4 flex min-h-11 items-center justify-center gap-2 text-xs font-bold text-emerald-800 underline decoration-emerald-300 underline-offset-4"><WhatsAppIcon className="size-4" />{selectedProduct.category === "guias" ? "Consultar guía por WhatsApp" : "Consultar esta pieza por WhatsApp"}</WhatsAppLink>
+          <p className="mt-3 text-center text-[10px] leading-relaxed text-stone-500">{selectedProduct.category === "guias" ? "Guía de demostración. Consulta su disponibilidad; no hay descarga ni cobro automático en esta versión." : "Producto ilustrativo. Confirma existencias y costo de envío antes de pagar."}</p>
+        </div>}
         {dialog === "cart" && <div className="p-5 sm:p-7">{cart.length === 0 ? <div className="px-2 py-10 text-center"><ShoppingBag className="mx-auto mb-5 size-12 text-rose-300" strokeWidth={1} aria-hidden="true" /><h3 className="text-xl font-extrabold tracking-tight">Aquí empieza algo bonito</h3><p className="mx-auto mb-6 mt-3 max-w-xs text-sm leading-relaxed text-stone-500">Tu bolsa está esperando un poquito de color. Descubre kits, piezas y guías para tu próximo proyecto.</p><button type="button" onClick={() => { setDialog(null); router.push("/kits"); }} className={primaryButton}>Explorar la tiendita<ArrowRight className="size-4" aria-hidden="true" /></button></div> : <><ul className="divide-y divide-stone-200">{cart.map((item) => { const product = products.find((p) => p.id === item.productId)!; return <li key={item.productId} className="flex items-start gap-3 py-4 first:pt-0"><img src={product.image} alt="" width={76} height={76} className="size-16 shrink-0 rounded-xl object-cover sm:size-[76px]" /><div className="min-w-0 flex-1"><h3 className="pr-1 text-xs font-extrabold leading-relaxed">{product.name}</h3><p className="mt-1 text-xs text-stone-500">{formatPrice(product.price)} CLP / unidad</p><div className="mt-3 flex items-center gap-1">{product.category !== "guias" ? <><button type="button" onClick={() => updateQuantity(product.id, -1)} disabled={item.quantity <= 1} aria-label={`Quitar una unidad de ${product.name}`} className="flex size-8 items-center justify-center rounded-full border border-stone-200 bg-white disabled:cursor-not-allowed disabled:opacity-30"><Minus className="size-3" aria-hidden="true" /></button><span className="min-w-7 text-center text-xs font-bold" aria-label={`${item.quantity} unidades`}>{item.quantity}</span><button type="button" onClick={() => updateQuantity(product.id, 1)} disabled={item.quantity >= (product.stock ?? 99)} aria-label={`Sumar una unidad de ${product.name}`} className="flex size-8 items-center justify-center rounded-full border border-stone-200 bg-white disabled:cursor-not-allowed disabled:opacity-30"><Plus className="size-3" aria-hidden="true" /></button></> : <span className="text-[10px] text-purple-700">1 guía digital · PDF</span>}<button type="button" onClick={() => { setCart((current) => current.filter((entry) => entry.productId !== product.id)); setAnnouncement(`${product.name} eliminado de tu bolsa.`); }} aria-label={`Eliminar ${product.name} de la bolsa`} className="ml-2 flex size-9 items-center justify-center rounded-full text-stone-400 transition-colors hover:bg-rose-50 hover:text-rose-600"><Trash2 className="size-3.5" aria-hidden="true" /></button></div></div><span className="shrink-0 text-xs font-extrabold">{formatPrice(product.price * item.quantity)}</span></li>; })}</ul><div className="mt-4 rounded-2xl bg-white p-5"><div className="flex items-center justify-between gap-3 text-sm font-extrabold"><span>Subtotal de referencia</span><span>{formatPrice(cartTotal)} CLP</span></div><p className="mt-2 text-[10px] leading-relaxed text-stone-500">Envío no incluido. Disponibilidad, valor final y forma de entrega a confirmar por WhatsApp.</p></div><WhatsAppLink message={cartMessage} className={`${buttonBase} mt-5 w-full bg-emerald-800 px-6 py-3.5 text-white hover:bg-emerald-900`}><WhatsAppIcon className="size-5" />Consultar pedido por WhatsApp<ArrowUpRight className="size-4" aria-hidden="true" /></WhatsAppLink><p className="mt-3 text-center text-[10px] leading-relaxed text-stone-500">Tu bolsa se guarda en este navegador. No se ha realizado ningún cobro.</p></>}</div>}
       </dialog>
     </StorefrontContext.Provider>
